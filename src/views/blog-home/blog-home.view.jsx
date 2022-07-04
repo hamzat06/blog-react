@@ -1,42 +1,43 @@
+import axios from "axios";
 import moment from "moment";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useCallback, useEffect, useState } from "react";
+// import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Arrow from "../../assets/images/arrow.svg";
-// import BlogCard from "../../components/blog-card/blog-card.component";
+import BlogCard from "../../components/blog-card/blog-card.component";
 import Loader from "../../components/loader/loader.component";
 import PaymentFlutterwave from "../../components/payment-flutterwave/payment-flutterwave.component";
-import {
-  fetchPosts,
-  selectFetching,
-  selectPosts,
-} from "../../features/post/post.slice";
+// import {
+//   fetchPosts,
+//   selectFetching,
+//   selectPosts,
+// } from "../../features/post/post.slice";
 import "./blog-home.styles.scss";
 
 const BlogHome = () => {
-  const posts = useSelector(selectPosts);
-  const fetching = useSelector(selectFetching);
-  const dispatch = useDispatch();
-  // const [posts, setPosts] = useState([]);
-  // const [fetching, setFetching] = useState(true);
-  // const fetchPosts = useCallback(() => {
-  //   // let siteURL = "https://techcrunch.com";
-  //   // let url = `${siteURL}/wp-json/wp/v2/posts?page=1&per_page=7`;
-  //   axios
-  //     .get("https://techcrunch.com/wp-json/wp/v2/posts?page=1&per_page=7")
-  //     .then((response) => {
-  //       console.log(response.data);
-  //       dispatch(setPosts(response.data));
-  //     })
-  //     .catch((err) => {
-  //       alert(err);
-  //     })
-  //     .finally(() => dispatch(setFetching));
-  // }, [dispatch]);
+  // const posts = useSelector(selectPosts);
+  // const fetching = useSelector(selectFetching);
+  // const dispatch = useDispatch();
+  const [posts, setPosts] = useState([]);
+  const [fetching, setFetching] = useState(true);
+  const fetchPosts = useCallback(() => {
+    // let siteURL = "https://techcrunch.com";
+    // let url = `${siteURL}/wp-json/wp/v2/posts?page=1&per_page=7`;
+    axios
+      .get("https://techcrunch.com/wp-json/wp/v2/posts?page=1&per_page=7")
+      .then((response) => {
+        console.log(response.data);
+        setPosts(response.data);
+      })
+      .catch((err) => {
+        alert(err);
+      })
+      .finally(() => setFetching(false));
+  }, []);
 
   useEffect(() => {
-    dispatch(fetchPosts());
-  }, [dispatch]);
+    fetchPosts();
+  }, [fetchPosts]);
 
   const mainPost = posts[0];
   const otherPosts = posts.filter((post, index) => index !== 0);
@@ -90,7 +91,7 @@ const BlogHome = () => {
             </div>
           </div>
 
-          {/* <div className="posts-grid">
+          <div className="posts-grid">
             {otherPosts?.map((post) => {
               return (
                 <BlogCard
@@ -103,7 +104,7 @@ const BlogHome = () => {
                 />
               );
             })}
-          </div> */}
+          </div>
           <PaymentFlutterwave />
         </div>
       )}
